@@ -1,0 +1,27 @@
+# DocuRAG Architecture and Foundations
+
+## 1. Overview of Retrieval-Augmented Generation
+Retrieval-Augmented Generation (RAG) is an architectural pattern in artificial intelligence that combines information retrieval systems with generative large language models (LLMs). Rather than relying solely on the static internal weights of a pre-trained language model, RAG dynamically fetches relevant factual context from an external knowledge repository at query time and supplies it to the generator.
+
+## 2. Core Components of a RAG System
+A typical production RAG system is comprised of seven fundamental pipeline stages:
+1. Document Ingestion: Ingesting raw files in formats such as PDF, DOCX, and TXT.
+2. Text Extraction & Cleaning: Converting binary formats to normalized text and stripping excessive whitespace while preserving semantic layout.
+3. Document Chunking: Partitioning continuous documents into cohesive text segments with configurable chunk size (such as 800 characters) and overlap (such as 150 characters).
+4. Embedding Generation: Converting textual chunks into dense semantic vector representations using neural embedding models.
+5. Vector Database Storage: Persisting embeddings, chunk text, and source metadata in a vector store such as ChromaDB.
+6. Similarity Retrieval: Transforming user queries into vector space and performing Top-K approximate nearest neighbor (ANN) or cosine distance search.
+7. Grounded Generation: Constructing an augmented prompt containing only the retrieved context chunks and prompting the LLM to formulate an answer with strict source citations.
+
+## 3. Benefits of RAG
+The primary advantages of RAG include:
+- Mitigating Hallucinations: Grounding answers in verified reference data prevents the model from confabulating facts.
+- Up-to-Date Knowledge: Repositories can be updated in real-time without costly retraining or fine-tuning.
+- Source Verifiability: Every factual assertion is accompanied by an exact source citation (document name, page number, and chunk index).
+- Domain Adaptation: Enterprise proprietary documents can be queried securely within local boundaries.
+
+## 4. Chunking Strategies and Overlap
+Chunking determines the granularity of retrieved knowledge. A chunk size that is too small loses crucial contextual semantics, whereas a chunk size that is too large dilutes the specific signal and risks exceeding LLM context windows. Overlap ensures that key sentences spanning boundary edges are not sliced in half, preserving semantic continuity between adjacent chunks.
+
+## 5. Security and Injection Resistance
+RAG systems must treat all uploaded documents as untrusted user data. When adversarial inputs attempt to override system rules via indirect prompt injection, a defensive system prompt instructs the model to interpret document content strictly as passive reference data rather than executable instructions.

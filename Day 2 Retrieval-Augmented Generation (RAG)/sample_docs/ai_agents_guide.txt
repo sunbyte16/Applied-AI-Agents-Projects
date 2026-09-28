@@ -1,0 +1,24 @@
+# Applied AI Agents Guide
+
+## 1. Definition of Autonomous AI Agents
+An autonomous AI agent is a software entity powered by large language models that perceives its environment through tools, reasons about objectives, formulates multi-step action plans, and executes actions to accomplish specific goals with minimal human intervention.
+
+## 2. Core Architectural Pillars of AI Agents
+Autonomous agents rely on four key pillars:
+1. Brain & Reasoning: The central LLM engine that performs chain-of-thought planning, decomposition, and reflection.
+2. Memory:
+   - Short-term Memory: In-context working memory spanning the active conversation window.
+   - Long-term Memory: External vector databases (RAG) that allow agents to recall past experiences, user preferences, and enterprise documentation.
+3. Tool Use & Execution: Functional APIs, bash commands, code interpreters, and web search integrations that allow the agent to interact with the digital world.
+4. Planning & Self-Correction: ReAct (Reasoning and Acting) loops, Reflexion frameworks, and tree-of-thought exploration that evaluate intermediate results and retry upon failure.
+
+## 3. Difference Between Standard RAG and Agentic RAG
+Standard RAG follows a linear, single-shot pipeline: Query -> Retrieve -> Generate.
+Agentic RAG introduces iterative decision loops where an agent can:
+- Reformulate ambiguous queries.
+- Decide whether retrieval is actually necessary or if internal reasoning suffices.
+- Execute multiple multi-hop queries across heterogeneous vector databases and web tools.
+- Critique retrieved chunks for relevance before answering.
+
+## 4. Skills and Tool Calling
+Modern agent frameworks equip models with declarative JSON schemas representing tools. The agent emits structured tool calls with precise arguments, and the hosting runtime executes the tool and passes execution results back into the agent context.

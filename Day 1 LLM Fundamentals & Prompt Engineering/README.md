@@ -10,6 +10,7 @@
 [![Pydantic](https://img.shields.io/badge/Pydantic-V2-E92063?style=for-the-badge&logo=pydantic&logoColor=white)](https://docs.pydantic.dev)
 [![Pytest](https://img.shields.io/badge/Pytest-18%20Tests-0A9EDC?style=for-the-badge&logo=pytest&logoColor=white)](https://pytest.org)
 [![License](https://img.shields.io/badge/License-MIT-22C55E?style=for-the-badge)](LICENSE)
+[![Contributing](https://img.shields.io/badge/Contributing-Guide-F97316?style=for-the-badge&logo=githubsponsors&logoColor=white)](CONTRIBUTING.md)
 
 <br/>
 
