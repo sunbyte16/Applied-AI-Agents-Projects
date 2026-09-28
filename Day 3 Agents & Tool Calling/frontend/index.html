@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AgentLab AI - Tool-Using AI Agent & Function Calling Playground</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Markdown parser -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Top Navigation Header -->
+    <header class="app-header">
+      <div class="brand-section">
+        <div class="brand-logo">
+          <div class="pulse-indicator"></div>
+          <span class="logo-icon">⚡</span>
+        </div>
+        <div class="brand-text">
+          <div class="brand-title-wrap">
+            <h1 class="brand-title">AgentLab AI</h1>
+            <span class="badge-version">v1.0</span>
+          </div>
+          <p class="brand-subtitle">Tool-Using AI Agent & Function Calling Playground</p>
+        </div>
+      </div>
+
+      <div class="header-status-section">
+        <div class="status-pill" id="system-status-pill">
+          <span class="status-dot connected"></span>
+          <span id="provider-status-text">Connecting...</span>
+        </div>
+        <div class="model-badge" id="current-model-badge">
+          <span class="badge-label">MODEL</span>
+          <span id="model-name-text">openai/gpt-oss-120b</span>
+        </div>
+        <button class="btn btn-secondary btn-sm" id="btn-settings-toggle" title="Settings">
+          ⚙️ Settings
+        </button>
+        <button class="btn btn-secondary btn-sm" id="btn-clear-chat" title="Clear Conversation">
+          🗑️ Clear
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Workspace Container -->
+    <div class="workspace-container">
+      <!-- Left Sidebar: Tools Dashboard & Demos -->
+      <aside class="sidebar-panel">
+        <!-- Tools Management Card -->
+        <div class="sidebar-card">
+          <div class="card-header">
+            <div class="card-header-left">
+              <span class="card-icon">🎛️</span>
+              <h2 class="card-title">Available Tools</h2>
+            </div>
+            <span class="badge-pill" id="tools-active-badge">5/5 Active</span>
+          </div>
+          <p class="card-description">
+            Enable or disable tools to test agent tool-selection behavior.
+          </p>
+
+          <div class="tools-list" id="tools-list-container">
+            <!-- Tool 1: Calculator -->
+            <div class="tool-item">
+              <label class="tool-label">
+                <input type="checkbox" class="tool-checkbox" id="tool-cb-calculator" data-tool="calculator" checked>
+                <div class="tool-info">
+                  <span class="tool-name">🧮 Calculator</span>
+                  <span class="tool-desc">Safe arithmetic & percentages (AST)</span>
+                </div>
+              </label>
+              <button class="btn-icon" data-view-schema="calculator" title="View Schema">ℹ️</button>
+            </div>
+
+            <!-- Tool 2: Search -->
+            <div class="tool-item">
+              <label class="tool-label">
+                <input type="checkbox" class="tool-checkbox" id="tool-cb-search" data-tool="search" checked>
+                <div class="tool-info">
+                  <span class="tool-name">🔎 Web Search</span>
+                  <span class="tool-desc">External information & current facts</span>
+                </div>
+              </label>
+              <button class="btn-icon" data-view-schema="search" title="View Schema">ℹ️</button>
+            </div>
+
+            <!-- Tool 3: Weather -->
+            <div class="tool-item">
+              <label class="tool-label">
+                <input type="checkbox" class="tool-checkbox" id="tool-cb-weather" data-tool="weather" checked>
+                <div class="tool-info">
+                  <span class="tool-name">🌤 Weather</span>
+                  <span class="tool-desc">Live global forecast & conditions</span>
+                </div>
+              </label>
+              <button class="btn-icon" data-view-schema="weather" title="View Schema">ℹ️</button>
+            </div>
+
+            <!-- Tool 4: Database -->
+            <div class="tool-item">
+              <label class="tool-label">
+                <input type="checkbox" class="tool-checkbox" id="tool-cb-database" data-tool="database" checked>
+                <div class="tool-info">
+                  <span class="tool-name">🗄 Database</span>
+                  <span class="tool-desc">SQLite read-only products/orders</span>
+                </div>
+              </label>
+              <button class="btn-icon" data-view-schema="database" title="View Schema">ℹ️</button>
+            </div>
+
+            <!-- Tool 5: Custom Skill Gap -->
+            <div class="tool-item">
+              <label class="tool-label">
+                <input type="checkbox" class="tool-checkbox" id="tool-cb-custom" data-tool="custom" checked>
+                <div class="tool-info">
+                  <span class="tool-name">🧩 Skill Gap Analyzer</span>
+                  <span class="tool-desc">Role benchmark & gap evaluator</span>
+                </div>
+              </label>
+              <button class="btn-icon" data-view-schema="skill_gap_calculator" title="View Schema">ℹ️</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Predefined Demo Test Cases -->
+        <div class="sidebar-card">
+          <div class="card-header">
+            <div class="card-header-left">
+              <span class="card-icon">🚀</span>
+              <h2 class="card-title">Predefined Test Cases</h2>
+            </div>
+          </div>
+          <p class="card-description">1-Click scenarios to evaluate agent reasoning:</p>
+
+          <div class="demo-buttons-grid">
+            <button class="demo-btn" data-query="What is machine learning in simple terms?" data-expected="No Tool (Direct)">
+              <span class="demo-tag direct">Test 1: Direct</span>
+              <span class="demo-text">What is machine learning?</span>
+            </button>
+
+            <button class="demo-btn" data-query="Calculate 9876 * 543" data-expected="Calculator">
+              <span class="demo-tag calc">Test 2: Calculator</span>
+              <span class="demo-text">Calculate 9876 × 543</span>
+            </button>
+
+            <button class="demo-btn" data-query="What is the current weather in Hyderabad?" data-expected="Weather">
+              <span class="demo-tag weather">Test 3: Weather</span>
+              <span class="demo-text">Weather in Hyderabad</span>
+            </button>
+
+            <button class="demo-btn" data-query="How many products are in the database?" data-expected="Database">
+              <span class="demo-tag db">Test 4: Database</span>
+              <span class="demo-text">Count products in DB</span>
+            </button>
+
+            <button class="demo-btn" data-query="Search for the latest developments in retrieval augmented generation" data-expected="Search">
+              <span class="demo-tag search">Test 5: Search</span>
+              <span class="demo-text">Latest RAG developments</span>
+            </button>
+
+            <button class="demo-btn" data-query="Analyze my skills for a Machine Learning Engineer role: Python, SQL, TensorFlow." data-expected="Skill Gap">
+              <span class="demo-tag custom">Test 6: Custom</span>
+              <span class="demo-text">Skill Gap Analysis</span>
+            </button>
+
+            <button class="demo-btn" data-query="Calculate 45 * 72 and tell me the weather in Hyderabad." data-expected="Calc + Weather">
+              <span class="demo-tag multi">Test 7: Multi-Tool</span>
+              <span class="demo-text">45 × 72 + Hyderabad Weather</span>
+            </button>
+
+            <button class="demo-btn" id="btn-test-tool-failure" data-query="What is the weather in Hyderabad?" data-action="disable-weather" data-expected="Controlled Failure">
+              <span class="demo-tag fail">Test 8: Disabled</span>
+              <span class="demo-text">Disable Weather & Test Fail</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Architecture Flow Card -->
+        <div class="sidebar-card flow-card">
+          <div class="card-header">
+            <span class="card-icon">🔄</span>
+            <h3 class="card-title">Agentic Loop Flow</h3>
+          </div>
+          <div class="agent-flow-diagram">
+            <div class="flow-node">User Request</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-node highlight">LLM Intent Analysis</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-branch">
+              <span class="branch-label">Tool Needed?</span>
+            </div>
+            <div class="flow-split">
+              <div class="flow-subpath">
+                <span class="subpath-title">NO ➔ Final Answer</span>
+              </div>
+              <div class="flow-subpath">
+                <span class="subpath-title">YES ➔ Tool Exec ➔ Loop</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main Chat Area -->
+      <main class="chat-main-panel">
+        <!-- Chat History Container -->
+        <div class="chat-messages-container" id="chat-messages-container">
+          <!-- Initial Welcome Message -->
+          <div class="message-row assistant-row welcome-banner">
+            <div class="message-avatar">⚡</div>
+            <div class="message-content">
+              <div class="message-header">
+                <span class="sender-name">AgentLab AI</span>
+                <span class="message-timestamp">Ready</span>
+              </div>
+              <div class="message-body">
+                <p>Welcome to <strong>AgentLab AI</strong> — an autonomous tool-using agent playground powered by native function calling.</p>
+                <div class="architecture-pills">
+                  <span class="arch-pill">✔ Native Tool Calling</span>
+                  <span class="arch-pill">✔ Multi-Tool Orchestration</span>
+                  <span class="arch-pill">✔ Zero Hardcoded Routing</span>
+                  <span class="arch-pill">✔ Sandboxed Safe Execution</span>
+                </div>
+                <p class="welcome-hint">Try selecting one of the predefined test cases on the left or type your own question below.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chat Input Bar -->
+        <div class="chat-input-wrapper">
+          <form class="chat-input-form" id="chat-form">
+            <div class="input-controls-row">
+              <textarea
+                id="user-input-field"
+                class="chat-textarea"
+                rows="1"
+                placeholder="Ask a question or request a calculation, weather, search, DB query, or skill gap..."
+                required
+              ></textarea>
+              <button type="submit" class="btn btn-primary btn-send" id="btn-submit">
+                <span class="btn-text">Send</span>
+                <span class="btn-icon">➤</span>
+              </button>
+            </div>
+            <div class="input-footer">
+              <span class="shortcut-tip">Press <kbd>Enter</kbd> to send, <kbd>Shift + Enter</kbd> for newline</span>
+              <div class="active-tools-summary" id="input-tools-summary">
+                <span class="tiny-label">Active:</span>
+                <span class="tool-tag-pill">Calculator</span>
+                <span class="tool-tag-pill">Search</span>
+                <span class="tool-tag-pill">Weather</span>
+                <span class="tool-tag-pill">Database</span>
+                <span class="tool-tag-pill">Custom</span>
+              </div>
+            </div>
+          </form>
+        </div>
+      </main>
+    </div>
+
+    <!-- Settings Drawer / Modal -->
+    <div class="modal-backdrop" id="settings-modal" style="display: none;">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h3 class="modal-title">⚙️ Agent Runtime Settings</h3>
+          <button class="btn-close" id="btn-close-settings">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="setting-model">LLM Model</label>
+            <input type="text" class="form-input" id="setting-model" value="openai/gpt-oss-120b">
+            <span class="form-hint">Groq models: openai/gpt-oss-120b, qwen/qwen3.8-27b</span>
+          </div>
+
+          <div class="form-group">
+            <div class="slider-label-row">
+              <label class="form-label" for="setting-temperature">Temperature</label>
+              <span class="slider-val" id="val-temperature">0.2</span>
+            </div>
+            <input type="range" class="form-range" id="setting-temperature" min="0" max="1" step="0.05" value="0.2">
+            <span class="form-hint">Lower values ensure deterministic tool calling decisions.</span>
+          </div>
+
+          <div class="form-group">
+            <div class="slider-label-row">
+              <label class="form-label" for="setting-max-tools">Max Sequential Tool Calls</label>
+              <span class="slider-val" id="val-max-tools">5</span>
+            </div>
+            <input type="range" class="form-range" id="setting-max-tools" min="1" max="10" step="1" value="5">
+            <span class="form-hint">Prevents infinite agent loops by capping iterative executions.</span>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" id="btn-save-settings">Save Settings</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tool Schema & Inspection Modal -->
+    <div class="modal-backdrop" id="inspector-modal" style="display: none;">
+      <div class="modal-card modal-lg">
+        <div class="modal-header">
+          <h3 class="modal-title" id="inspector-title">🔧 Tool Inspector</h3>
+          <button class="btn-close" id="btn-close-inspector">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="inspector-section">
+            <h4 class="inspector-section-title">Input Parameters / Schema</h4>
+            <pre class="code-block" id="inspector-input"><code>{}</code></pre>
+          </div>
+          <div class="inspector-section">
+            <h4 class="inspector-section-title">Output Result</h4>
+            <pre class="code-block" id="inspector-output"><code>{}</code></pre>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" id="btn-copy-inspector">📋 Copy JSON</button>
+          <button class="btn btn-primary" id="btn-close-inspector-action">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
