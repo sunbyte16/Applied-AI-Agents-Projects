@@ -1,0 +1,22 @@
+# Global Employee Handbook & Corporate Policy
+
+## Section 1: Annual Leave and Vacation Policy
+All regular full-time employees are entitled to comprehensive paid annual leave designed to ensure personal well-being, rest, and work-life balance.
+
+### 1.1 Annual Vacation Allocation
+1. Baseline Allocation: Every regular full-time employee receives 20 paid vacation days per calendar year, accruing on the first day of each fiscal year.
+2. Tenure Bonus Rule: Employees earn 1 additional paid vacation day for every 2 completed years of continuous service with the company.
+3. Maximum Cap: The maximum cumulative vacation entitlement under this tenure rule is capped at 28 vacation days per calendar year.
+4. Calculation Example: An employee with 6 years of completed service receives 20 baseline days + (6 / 2 = 3 bonus days) = 23 total vacation days.
+
+### 1.2 Sick Leave & Wellness
+Employees receive 10 dedicated paid sick and wellness days annually. Sick leave is distinct from annual vacation and requires notification to People Operations within 24 hours of absence.
+
+### 1.3 Parental and Family Leave
+Primary caregivers are eligible for 16 weeks of fully paid parental leave following the birth or adoption of a child. Secondary caregivers receive 8 weeks of fully paid leave.
+
+## Section 2: Remote and Flexible Work Guidelines
+Employees in eligible technical and administrative roles may participate in the hybrid work program, allowing up to 3 days of remote work per workweek with manager approval. Core collaboration hours are 10:00 AM to 4:00 PM in the employee's local time zone.
+
+## Section 3: Professional Conduct and Security
+All corporate hardware, communication channels, and software repositories are monitored for compliance and data integrity. Employees must handle proprietary information strictly in accordance with security guidelines and never transmit confidential data to unvetted third-party platforms.

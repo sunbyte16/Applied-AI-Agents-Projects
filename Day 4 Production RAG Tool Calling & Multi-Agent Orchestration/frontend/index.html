@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OrchestraRAG AI — Production Multi-Agent RAG & Tool Platform</title>
+  <link rel="stylesheet" href="/static/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body class="dark-theme">
+  <!-- Top Application Header -->
+  <header class="app-header">
+    <div class="header-left">
+      <div class="logo-badge">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+        </svg>
+      </div>
+      <div>
+        <h1 class="app-title">OrchestraRAG AI</h1>
+        <p class="app-subtitle">Production Multi-Agent RAG & Tool Orchestration Platform</p>
+      </div>
+    </div>
+
+    <div class="header-right">
+      <!-- Mode Switcher -->
+      <div class="mode-toggle-group">
+        <button id="mode-simple-btn" class="mode-btn active" onclick="setMode('simple')">Simple Mode</button>
+        <button id="mode-advanced-btn" class="mode-btn" onclick="setMode('advanced')">Advanced Mode</button>
+      </div>
+
+      <!-- Health telemetry chip -->
+      <div class="system-status-chip">
+        <span class="status-indicator-dot online"></span>
+        <span id="system-health-text">LLM: Groq (gpt-oss-120b)</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container Grid -->
+  <div class="app-layout">
+    <!-- LEFT SIDEBAR: AGENTS, TOOLS, KNOWLEDGE BASE -->
+    <aside class="sidebar">
+      <!-- Specialized Agents Dashboard -->
+      <section class="sidebar-section">
+        <div class="section-header">
+          <h3>Specialized Agents</h3>
+          <span class="badge count-badge" id="active-agents-count">6 Agents</span>
+        </div>
+        <div class="agents-list">
+          <div class="agent-card" id="agent-orchestrator">
+            <div class="agent-icon orch">🎯</div>
+            <div class="agent-info">
+              <div class="agent-name">Orchestrator Agent</div>
+              <div class="agent-role">Intent Planning & Routing</div>
+            </div>
+            <span class="status-tag waiting" id="status-tag-orchestrator">Waiting</span>
+          </div>
+
+          <div class="agent-card" id="agent-rag">
+            <div class="agent-icon rag">📚</div>
+            <div class="agent-info">
+              <div class="agent-name">RAG Agent</div>
+              <div class="agent-role">Vector DB Retrieval</div>
+            </div>
+            <span class="status-tag waiting" id="status-tag-rag">Waiting</span>
+          </div>
+
+          <div class="agent-card" id="agent-research">
+            <div class="agent-icon research">🌐</div>
+            <div class="agent-info">
+              <div class="agent-name">Research Agent</div>
+              <div class="agent-role">Live Web Verification</div>
+            </div>
+            <span class="status-tag waiting" id="status-tag-research">Waiting</span>
+          </div>
+
+          <div class="agent-card" id="agent-tool">
+            <div class="agent-icon tool">⚙️</div>
+            <div class="agent-info">
+              <div class="agent-name">Tool Agent</div>
+              <div class="agent-role">Calculator / SQL / APIs</div>
+            </div>
+            <span class="status-tag waiting" id="status-tag-tool">Waiting</span>
+          </div>
+
+          <div class="agent-card" id="agent-verification">
+            <div class="agent-icon verify">🛡️</div>
+            <div class="agent-info">
+              <div class="agent-name">Verification Agent</div>
+              <div class="agent-role">Groundedness & Conflict Audit</div>
+            </div>
+            <span class="status-tag waiting" id="status-tag-verification">Waiting</span>
+          </div>
+
+          <div class="agent-card" id="agent-synthesis">
+            <div class="agent-icon synth">✨</div>
+            <div class="agent-info">
+              <div class="agent-name">Synthesis Agent</div>
+              <div class="agent-role">Final Grounded Synthesis</div>
+            </div>
+            <span class="status-tag waiting" id="status-tag-synthesis">Waiting</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Registered Tools Panel -->
+      <section class="sidebar-section">
+        <div class="section-header">
+          <h3>Registered Tools</h3>
+          <span class="badge" id="tools-count-badge">5 Active</span>
+        </div>
+        <div class="tools-grid">
+          <div class="tool-chip" title="AST-based safe evaluation of arithmetic expressions without eval()">
+            <span class="tool-bullet">●</span>
+            <span class="tool-title">Calculator</span>
+            <span class="tool-badge-safe">Safe AST</span>
+          </div>
+          <div class="tool-chip" title="Read-only SQLite application database queries">
+            <span class="tool-bullet">●</span>
+            <span class="tool-title">Database</span>
+            <span class="tool-badge-safe">Read-Only SQL</span>
+          </div>
+          <div class="tool-chip" title="Live Open-Meteo meteorological API">
+            <span class="tool-bullet">●</span>
+            <span class="tool-title">Weather</span>
+            <span class="tool-badge-safe">Live API</span>
+          </div>
+          <div class="tool-chip" title="DuckDuckGo & Tavily external web queries">
+            <span class="tool-bullet">●</span>
+            <span class="tool-title">Search</span>
+            <span class="tool-badge-safe">Untrusted</span>
+          </div>
+          <div class="tool-chip" title="Percentage improvement and statistical calculations">
+            <span class="tool-bullet">●</span>
+            <span class="tool-title">Analytics</span>
+            <span class="tool-badge-safe">Metrics</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Knowledge Base Panel -->
+      <section class="sidebar-section kb-section">
+        <div class="section-header">
+          <h3>Knowledge Base</h3>
+          <span class="badge" id="kb-chunks-badge">18 Chunks</span>
+        </div>
+        <div class="kb-upload-container">
+          <input type="file" id="file-upload-input" accept=".txt,.pdf,.docx,.md" style="display:none" onchange="handleFileUpload(event)">
+          <button class="upload-btn" onclick="document.getElementById('file-upload-input').click()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+            Upload Document (PDF, TXT, DOCX)
+          </button>
+        </div>
+        <div class="kb-docs-list" id="kb-docs-list">
+          <!-- Dynamically populated -->
+          <div class="kb-doc-item loading">Loading knowledge base...</div>
+        </div>
+      </section>
+    </aside>
+
+    <!-- CENTER & RIGHT: WORKFLOW VISUALIZER, CHAT/ANSWER, TIMELINE -->
+    <main class="main-workspace">
+      <!-- Visual Workflow Graph (Advanced Mode / Interactive) -->
+      <div class="workflow-graph-card" id="workflow-graph-card">
+        <div class="graph-card-header">
+          <div class="graph-title-group">
+            <span class="graph-title">Multi-Agent Orchestration Flow Graph</span>
+            <span class="graph-caption">Dynamic LangGraph topology with conditional routing and verification feedback</span>
+          </div>
+          <span class="topology-pill">Centralized Orchestrator + Verification Loop</span>
+        </div>
+        <div class="graph-canvas-container">
+          <svg class="workflow-svg" viewBox="0 0 860 170" id="workflow-svg">
+            <!-- Connecting Paths -->
+            <path class="flow-edge" id="edge-start-orch" d="M 60 85 L 140 85" marker-end="url(#arrow)" />
+            <path class="flow-edge" id="edge-orch-rag" d="M 240 85 C 290 85, 290 35, 340 35" marker-end="url(#arrow)" />
+            <path class="flow-edge" id="edge-orch-res" d="M 240 85 L 340 85" marker-end="url(#arrow)" />
+            <path class="flow-edge" id="edge-orch-tool" d="M 240 85 C 290 85, 290 135, 340 135" marker-end="url(#arrow)" />
+
+            <path class="flow-edge" id="edge-rag-ver" d="M 440 35 C 490 35, 490 85, 540 85" marker-end="url(#arrow)" />
+            <path class="flow-edge" id="edge-res-ver" d="M 440 85 L 540 85" marker-end="url(#arrow)" />
+            <path class="flow-edge" id="edge-tool-ver" d="M 440 135 C 490 135, 490 85, 540 85" marker-end="url(#arrow)" />
+
+            <!-- Re-retrieval loop feedback -->
+            <path class="flow-edge loop-edge" id="edge-ver-loop" d="M 590 65 C 570 0, 410 0, 390 15" marker-end="url(#arrow-loop)" stroke-dasharray="4,4" />
+
+            <path class="flow-edge" id="edge-ver-synth" d="M 640 85 L 700 85" marker-end="url(#arrow)" />
+            <path class="flow-edge" id="edge-synth-end" d="M 800 85 L 835 85" marker-end="url(#arrow)" />
+
+            <defs>
+              <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 1 L 10 5 L 0 9 z" fill="#64748b" />
+              </marker>
+              <marker id="arrow-loop" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 1 L 10 5 L 0 9 z" fill="#f59e0b" />
+              </marker>
+            </defs>
+
+            <!-- Nodes -->
+            <g class="graph-node" id="gnode-user" transform="translate(10, 65)">
+              <rect width="50" height="40" rx="8" class="node-box user"></rect>
+              <text x="25" y="25" text-anchor="middle" class="node-label">USER</text>
+            </g>
+
+            <g class="graph-node" id="gnode-orch" transform="translate(140, 60)">
+              <rect width="100" height="50" rx="8" class="node-box orch"></rect>
+              <text x="50" y="24" text-anchor="middle" class="node-label-bold">ORCHESTRATOR</text>
+              <text x="50" y="38" text-anchor="middle" class="node-sublabel">Planning</text>
+            </g>
+
+            <g class="graph-node" id="gnode-rag" transform="translate(340, 10)">
+              <rect width="100" height="45" rx="8" class="node-box worker"></rect>
+              <text x="50" y="22" text-anchor="middle" class="node-label-bold">RAG AGENT</text>
+              <text x="50" y="36" text-anchor="middle" class="node-sublabel">Vector DB</text>
+            </g>
+
+            <g class="graph-node" id="gnode-research" transform="translate(340, 63)">
+              <rect width="100" height="45" rx="8" class="node-box worker"></rect>
+              <text x="50" y="22" text-anchor="middle" class="node-label-bold">RESEARCH</text>
+              <text x="50" y="36" text-anchor="middle" class="node-sublabel">Search API</text>
+            </g>
+
+            <g class="graph-node" id="gnode-tool" transform="translate(340, 115)">
+              <rect width="100" height="45" rx="8" class="node-box worker"></rect>
+              <text x="50" y="22" text-anchor="middle" class="node-label-bold">TOOL AGENT</text>
+              <text x="50" y="36" text-anchor="middle" class="node-sublabel">Calc / DB</text>
+            </g>
+
+            <g class="graph-node" id="gnode-verification" transform="translate(540, 60)">
+              <rect width="100" height="50" rx="8" class="node-box verify"></rect>
+              <text x="50" y="24" text-anchor="middle" class="node-label-bold">VERIFICATION</text>
+              <text x="50" y="38" text-anchor="middle" class="node-sublabel">Grounding</text>
+            </g>
+
+            <g class="graph-node" id="gnode-synthesis" transform="translate(700, 60)">
+              <rect width="100" height="50" rx="8" class="node-box synth"></rect>
+              <text x="50" y="24" text-anchor="middle" class="node-label-bold">SYNTHESIS</text>
+              <text x="50" y="38" text-anchor="middle" class="node-sublabel">Answer</text>
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Quick Demo Scenario Buttons -->
+      <div class="demo-pills-bar">
+        <span class="pills-label">Demo Scenarios:</span>
+        <button class="demo-pill" onclick="loadDemoQuery(1)">1. RAG Guide</button>
+        <button class="demo-pill" onclick="loadDemoQuery(2)">2. Safe Calculator</button>
+        <button class="demo-pill" onclick="loadDemoQuery(3)">3. Web Research</button>
+        <button class="demo-pill primary-pill" onclick="loadDemoQuery(4)">4. Complex Multi-Agent</button>
+        <button class="demo-pill" onclick="loadDemoQuery(5)">5. Hallucination Guard</button>
+        <button class="demo-pill" onclick="loadDemoQuery(6)">6. Prompt Injection</button>
+      </div>
+
+      <!-- User Query Input Panel -->
+      <div class="query-input-card">
+        <form id="workflow-form" onsubmit="submitQuery(event)">
+          <div class="input-wrapper">
+            <textarea
+              id="query-input"
+              rows="2"
+              placeholder="Ask a question, request document analysis, search external facts, or perform arithmetic..."
+              onkeydown="handleKeyDown(event)"
+            ></textarea>
+            <button type="submit" id="submit-btn" class="send-btn">
+              <span id="btn-text">Execute Workflow</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="22" y1="2" x2="11" y2="13"></line>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+              </svg>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Telemetry Observability Bar -->
+      <div class="observability-bar" id="observability-bar" style="display:none">
+        <div class="metric-item">
+          <span class="metric-label">Task ID</span>
+          <span class="metric-value mono" id="metric-task-id">-</span>
+        </div>
+        <div class="metric-item">
+          <span class="metric-label">Duration</span>
+          <span class="metric-value" id="metric-duration">-</span>
+        </div>
+        <div class="metric-item">
+          <span class="metric-label">Agents Used</span>
+          <span class="metric-value" id="metric-agents-count">-</span>
+        </div>
+        <div class="metric-item">
+          <span class="metric-label">Evidence Chunks</span>
+          <span class="metric-value" id="metric-evidence-count">-</span>
+        </div>
+        <div class="metric-item">
+          <span class="metric-label">Tool Calls</span>
+          <span class="metric-value" id="metric-tool-count">-</span>
+        </div>
+        <div class="metric-item">
+          <span class="metric-label">Verification</span>
+          <span class="metric-value" id="metric-verification-status">-</span>
+        </div>
+      </div>
+
+      <!-- Execution Results Split Grid (Answer + Execution Trace) -->
+      <div class="results-container">
+        <!-- Formatted Grounded Final Answer -->
+        <div class="answer-card" id="answer-card">
+          <div class="card-header">
+            <h3>Verified Multi-Agent Answer</h3>
+            <span class="badge status-pill ready" id="answer-status-pill">Ready</span>
+          </div>
+          <div class="answer-body" id="answer-content">
+            <div class="empty-state">
+              <div class="empty-icon">🎼</div>
+              <h4>Welcome to OrchestraRAG AI</h4>
+              <p>Submit a query above or click any of the 6 pre-configured demo scenarios to observe autonomous multi-agent orchestration, vector retrieval, and structured tool calling in real time.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Real Execution Timeline & Traces -->
+        <div class="timeline-card" id="timeline-card">
+          <div class="card-header">
+            <h3>Execution Timeline & Agent Traces</h3>
+            <span class="badge" id="trace-step-badge">0 Steps</span>
+          </div>
+          <div class="timeline-body" id="timeline-content">
+            <div class="empty-timeline">Trace timeline will stream events dynamically during execution.</div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Evidence Excerpt Modal -->
+  <div id="evidence-modal" class="modal-overlay" style="display:none" onclick="closeModal(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h4 id="modal-title">Source Evidence Details</h4>
+        <button class="close-btn" onclick="closeModal()">&times;</button>
+      </div>
+      <div class="modal-body" id="modal-body"></div>
+    </div>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

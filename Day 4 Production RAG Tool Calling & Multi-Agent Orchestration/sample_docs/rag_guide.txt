@@ -1,0 +1,25 @@
+# Production RAG Engineering Guide & Benchmarks
+
+## 1. Executive Summary
+Retrieval-Augmented Generation (RAG) is an architectural framework that enhances large language model generation by grounding answers in relevant factual passages retrieved dynamically from an external knowledge base. RAG eliminates hallucinations, enables continuous knowledge updates without costly fine-tuning, and provides verifiable source attribution.
+
+## 2. Core Components of a Production RAG System
+A production-grade RAG pipeline consists of the following primary components:
+1. Document Parser & Ingestion Engine: Ingests heterogeneous document formats (PDF, DOCX, TXT), removes noise, normalizes unicode, and cleans layout artifacts.
+2. Semantic Chunker: Segments long texts into coherent, semantically bounded passages with configurable chunk size (typically 500 characters or tokens) and chunk overlap (typically 100 characters) to preserve contextual boundaries.
+3. Metadata Engine: Enriches every chunk with deterministic provenance (document name, page number, section header, chunk index).
+4. Embedding Model: Projects natural language passages into dense vector representations where semantic similarity corresponds to cosine proximity in high-dimensional vector space.
+5. Persistent Vector Database: Indexes embeddings using Approximate Nearest Neighbor (ANN) indices (e.g., HNSW or IVF) for sub-millisecond similarity retrieval.
+6. Semantic Retriever & Reranker: Retrieves top-k candidate chunks (default Top K = 5) and optionally rescores candidates using cross-encoder rerankers.
+7. Context Builder & LLM Generator: Synthesizes retrieved evidence into an explicit prompt boundary and instructs the language model to generate grounded answers with strict citation requirements.
+
+## 3. Quantitative Performance Benchmarks
+In our enterprise evaluation benchmarks on complex domain datasets:
+- Standard LLM baseline without RAG scored an answer accuracy of 60.0 points.
+- Production RAG with dense vector retrieval achieved an answer accuracy of 84.0 points.
+- Adding cross-encoder reranking further boosted the accuracy to 90.0 points.
+- The absolute performance improvement from the standard baseline (60.0 points) to the reranked RAG system (90.0 points) is 30.0 points, representing a 50.0% relative improvement.
+- Retrieval latency averaged 42 milliseconds per query over 100,000 indexed chunks.
+
+## 4. Grounding and Source Attribution Standards
+Every factual claim produced by the RAG system must be linked to a verifiable source chunk. If the vector retrieval fails to find passages matching the query with a relevance score above 0.35, the RAG agent must refuse to fabricate information and explicitly declare that no supporting evidence was discovered in the repository.

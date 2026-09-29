@@ -1,0 +1,24 @@
+# Technical Overview: Autonomous AI Agents & Multi-Agent Orchestration
+
+## 1. Introduction to AI Agents
+An autonomous AI agent is a computational entity powered by large language models (LLMs) that perceives its environment through tools, maintains internal and shared memory, reasons over goals, and executes multi-step plans to achieve defined objectives. Unlike single-turn language models, multi-agent systems divide complex cognitive workloads among specialized worker agents.
+
+## 2. Core Components of an Autonomous Agent Architecture
+Every production AI agent architecture comprises four foundational pillars:
+1. Planning Layer: Decomposes high-level user tasks into discrete, logically ordered subtasks. Planning strategies include Chain-of-Thought (CoT), Tree of Thoughts (ToT), and Hierarchical Task Network (HTN) decomposition.
+2. Tool Layer: Interfaces that provide access to deterministic computation (calculators), structured databases (SQL/vector stores), and external live APIs (search, weather, enterprise systems).
+3. Memory & Context Layer: Differentiates short-term conversation context, working scratchpad state, and long-term episodic or semantic memory stored in vector stores.
+4. Execution & Orchestration Layer: Coordinates agent transitions, passes structured messages, manages failure retries, and enforces boundary constraints to prevent infinite loops.
+
+## 3. Multi-Agent Collaboration Topologies
+Modern enterprise agent systems utilize distinct coordination topologies:
+- Centralized Orchestrator-Worker: A master Orchestrator agent evaluates incoming requests, formulates an execution plan, delegates subtasks to specialized domain agents (e.g., RAG Agent, Research Agent, Tool Agent), and collects results.
+- Peer-to-Peer Consensus: Independent agents negotiate and critique intermediate artifacts directly.
+- Sequential Pipeline: Workflows proceed linearly through staged transformation steps.
+- Verification-in-the-Loop: A dedicated Verification Agent critiques retrieved facts, identifies contradictions, checks citations, and authorizes synthesis or triggers supplementary retrieval.
+
+## 4. Guardrails and Operational Security
+Production multi-agent deployments must implement rigorous security guardrails:
+- Untrusted Data Boundary: All retrieved document chunks, web search snippets, and tool responses must be isolated and marked untrusted to prevent prompt injection attacks.
+- Strict Resource Limits: Maximum agent retries (typically 2), maximum tool calls (typically 5 per step), and maximum workflow iterations (typically 12).
+- Non-Destructive Tool Sandboxing: Mathematical calculations must utilize Abstract Syntax Tree (AST) parsing without arbitrary code execution (no unrestricted eval), and database tools must enforce read-only SELECT permissions.
