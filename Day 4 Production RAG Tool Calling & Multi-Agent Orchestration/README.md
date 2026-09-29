@@ -7,6 +7,8 @@
 [![Tests](https://img.shields.io/badge/Tests-30%2F30%20Passed%20(100%25)-success.svg)](./tests)
 [![Evaluation](https://img.shields.io/badge/Eval%20Completion-100%25-blueviolet.svg)](./evaluation)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Contributing](https://img.shields.io/badge/PRs-Welcome-blueviolet.svg)](CONTRIBUTING.md)
+
 
 > **Day 4 Internship Capstone Project**: Applied AI Agents  
 > **Topic**: Production RAG, Tool Calling & Multi-Agent Orchestration  
@@ -825,6 +827,8 @@ tests/test_workflow.py::TestMultiAgentWorkflows::test_workflow_test_5_failure_re
 
 ---
 
-## License
+## License & Contributing
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+* **License**: This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+* **Contributing**: We welcome community contributions! Please review the [Contribution Guidelines](CONTRIBUTING.md) for architectural guardrails, coding standards, and pull request procedures.
+
